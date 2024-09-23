@@ -60,7 +60,15 @@
             @endforeach
         </tbody>
     </table>
+    
 </div>
+<br>
+    <br>
+    <div class="mb-3">
+        <button type="button" class="btn btn-primary align-items-center" style="background-color: blue; border-color: blue;">
+            <a href="{{ route('teacher.index') }}" class="text-decoration-none text-white"><i><strong>View Teachers Table</strong></i></a>
+        </button>
+    </div>
 
 <!-- Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

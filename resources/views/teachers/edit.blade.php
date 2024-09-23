@@ -40,7 +40,7 @@
             <!-- Mobile No Input -->
             <div class="form-group">
                 <label for="mobile">Mobile No:</label>
-                <input type="mobile" maxlength="11" class="form-control p-input" id="mobile" name="mobile"> 
+                <input type="mobile" maxlength="11" class="form-control p-input" id="mobile" name="mobile" value="{{$teacher->mobile }}"> 
             </div>
 
             <!-- Email Input -->

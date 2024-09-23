@@ -41,7 +41,7 @@
                     <td>
                         <a href="{{ route('teacher.edit', ['teacher'=>$teacher]) }}" class="btn btn-primary">Update</a>
                     </td>
-                    <td>
+            <td>
                         <form action="{{ route('teacher.destroy', ['teacher'=>$teacher]) }}" method="POST" style="display: inline-block;">
                             @csrf
                             @method('DELETE')
@@ -53,7 +53,13 @@
         </tbody>
     </table>
 </div>
-
+<br/>
+<br/>
+<div class="mb-3">
+    <button type="button" class="btn btn-primary align-items-center" style="background-color: blue; border-color: blue;">
+        <a href="{{ route('course.index') }}" class="text-decoration-none text-white"><i><strong>View Courses Table</strong></i></a>
+    </button>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
