@@ -79,7 +79,7 @@
         </form>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Initialize DataTable and store the instance
             const billTable = $('#billTable').DataTable();
     
@@ -87,13 +87,13 @@
             let count = 1;
     
             // Add a new row on button click
-            $('#addField').click(function() {
+            $('#addField').click(function () {
                 // Fetch billing sectors from the server
                 $.ajax({
                     url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
                     type: 'GET',
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         if (data.length > 0) {
                             // Generate the dropdown options from the fetched data
                             let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
@@ -108,13 +108,13 @@
                                     ${optionsHTML}
                                 </select>`,
                                 `<input type="text" class="form-control" name="course_no[]" placeholder="Enter Course No">`,
-                                `<input type="number" class="form-control" name="scripts[]" placeholder="Enter No of Scripts">`,
+                                `<input type="number" class="form-control scripts" name="scripts[]" placeholder="Enter No of Scripts">`,
                                 `<select class="form-control" name="paper_type[]">
                                     <option value="full">Full Paper</option>
                                     <option value="half">Half Paper</option>
                                 </select>`,
                                 `<input type="number" class="form-control rate" name="rate[]" placeholder="Enter Rate">`,
-                                `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Enter Total Amount">`,
+                                `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
                                 `<button type="button" class="btn btn-danger removeRow">Remove</button>`
                             ]).draw(false); // Draw the table to update the UI
     
@@ -124,20 +124,20 @@
                             console.error('No billing sectors available to add.');
                         }
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.error('Error fetching billing sectors:', error);
                     }
                 });
             });
     
             // Event delegation to handle row removal
-            $('#billTable tbody').on('click', '.removeRow', function() {
+            $('#billTable tbody').on('click', '.removeRow', function () {
                 // Remove the row from DataTable
                 billTable.row($(this).closest('tr')).remove().draw(false);
     
                 // Recalculate serial numbers after a row is removed
                 let currentRows = billTable.rows().nodes();
-                $(currentRows).each(function(index, row) {
+                $(currentRows).each(function (index, row) {
                     $(row).find('td:first').text(index + 1); // Update the serial number column
                 });
     
@@ -148,27 +148,32 @@
                 calculateTotalAmount();
             });
     
-            // Calculate the total amount function
+            // Function to calculate total amount per row and overall total amount
             function calculateTotalAmount() {
                 let totalAmount = 0;
     
-                // Loop through all rows and sum up the values in the 'Total Amount' column
-                $('#billTable tbody .total-amount').each(function() {
-                    let value = parseFloat($(this).val());
-                    if (!isNaN(value)) {
-                        totalAmount += value;
-                    }
+                // Loop through all rows and calculate the total amount per row
+                $('#billTable tbody tr').each(function () {
+                    const scripts = parseFloat($(this).find('.scripts').val()) || 0; // Default to 0 if empty
+                    const rate = parseFloat($(this).find('.rate').val()) || 0; // Default to 0 if empty
+                    const rowTotal = scripts * rate;
+    
+                    // Set the calculated row total into the Total Amount input field
+                    $(this).find('.total-amount').val(rowTotal.toFixed(2));
+    
+                    // Add the row total to the overall total amount
+                    totalAmount += rowTotal;
                 });
     
                 // Update the total amount display
                 $('#totalAmount').text(totalAmount.toFixed(2));
             }
     
-            // Recalculate the total amount when any 'Total Amount' input changes
-            $('#billTable tbody').on('input', '.total-amount', function() {
+            // Recalculate the row total and overall total whenever Scripts or Rate changes
+            $('#billTable tbody').on('input', '.scripts, .rate', function () {
                 calculateTotalAmount();
             });
         });
-    </script>  
+    </script>
 </body>
 </html>
