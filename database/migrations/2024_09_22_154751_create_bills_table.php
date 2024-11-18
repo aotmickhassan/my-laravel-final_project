@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            // Define the exam_id column
             $table->unsignedBigInteger('exam_id'); // Define exam_id as unsignedBigInteger
-
             $table->string('bank_account');
             $table->string('branch_name');
             $table->string('routing_number');

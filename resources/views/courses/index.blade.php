@@ -6,6 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Course Index</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        a:hover {
+            background-color: rgb(234, 83, 153) !important;
+        }
+        .btn-custom:hover {
+            background-color: rgb(137, 193, 229);
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -65,8 +73,8 @@
 <br>
     <br>
     <div class="mb-3">
-        <button type="button" class="btn btn-primary align-items-center" style="background-color: blue; border-color: blue;">
-            <a href="{{ route('teacher.index') }}" class="text-decoration-none text-white"><i><strong>View Teachers Table</strong></i></a>
+        <button type="button" class="mb-3 m-6 p-2 btn btn-primary align-items-center mb-3" style="background-color: blue; border-color: blue;">
+            <a href="{{ route('teacher.index') }}" class="btn-custom text-white"><i><strong>View Teachers Table</strong></i></a>
         </button>
     </div>
 
