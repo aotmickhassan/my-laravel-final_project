@@ -4,10 +4,42 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    <!-- Include the style here -->
+
+    <!-- Include the styles -->
     <style>
         a:hover {
             background-color: indigo !important;
+        }
+
+        .btn-custom {
+            background-color: blue;
+            border-color: blue;
+        }
+
+        .btn-custom a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            padding: 10px;
+            transition: background-color 0.3s ease-in-out;
+            border-radius: 4px;
+        }
+
+        .btn-custom a:hover {
+            background-color: indigo;
+        }
+
+        /* .center-content {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        } */
+
+        .button-group {
+            margin-bottom: 15px;
         }
     </style>
 
@@ -20,40 +52,38 @@
             </div>
         </div>
     </div>
-    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh; background-color: white;">
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary align-items-center" 
-                    style="background-color: blue; border-color: blue;">
-                <a href="{{ route('teacher.index') }}" 
-                   class="text-decoration-none text-white" 
-                   style="display: block; padding: 10px; transition: background-color 0.3s; border-radius: 4px;">
+
+    <div class="center-content">
+        <!-- Button for Teachers Table -->
+        <div class="button-group">
+            <button type="button" class="btn btn-custom">
+                <a href="{{ route('teacher.index') }}">
                     <i><strong>View Teachers Table</strong></i>
                 </a>
             </button>
         </div>
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary align-items-center" 
-                    style="background-color: blue; border-color: blue;">
-                <a href="{{ route('course.index') }}" 
-                   class="text-decoration-none text-white" 
-                   style="display: block; padding: 10px; transition: background-color 0.3s; border-radius: 4px;">
+
+        <!-- Button for Courses Table -->
+        <div class="button-group">
+            <button type="button" class="btn btn-custom">
+                <a href="{{ route('course.index') }}">
                     <i><strong>View Courses Table</strong></i>
                 </a>
             </button>
         </div>
-    </div>
-    {{-- <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh; background-color: white;">
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary align-items-center" 
-                    style="background-color: blue; border-color: blue;">
-                <a href="{{ route('department.index') }}" 
-                   class="text-decoration-none text-white" 
-                   style="display: block; padding: 10px; transition: background-color 0.3s; border-radius: 4px;">
-                    <i><strong>View Department Table</strong></i>
+
+        <!-- Button for Departments Table -->
+        <div class="button-group mt-4">
+            <button type="button" class="btn btn-custom btn-primary">
+                <a href="{{ route('department.index') }}" class="text-white text-decoration-none">
+                    <i><strong>View Departments Table</strong></i>
                 </a>
             </button>
+            <a href="{{ route('billDetail.index') }}" 
+   class="btn btn-primary btn-lg ml-3 d-inline-flex align-items-center custom-hover">
+    <i class="fas fa-eye mr-2"></i> <strong>View Bill Details</strong>
+            </a>
+
         </div>
-        
-    </div> --}}
-</div>
+    </div>
 </x-app-layout>

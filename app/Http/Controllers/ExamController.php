@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
-use App\Models\BillingSector;
-
 use Illuminate\Http\Request;
+use App\Models\Exam;
 
-class DepartmentController extends Controller
+class ExamController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $departments = Department::all();
-        $billingSectors = BillingSector::all(); // Fetch billing sector data
-        // $billingSectorFetchUrl = route('billingSectorFetch.data');
-
-        // Pass data to the view
-        return view('departments.index', compact('departments', 'billingSectors'), ['departments' => $departments]);
+        // Fetch all records from the exams table
+        // $exams = Exam::all();
+        $exams = Exam::select('exam_department', 'session_year')->get();
+        // dd($exams);
+        // Return the view and pass the fetched data
+        return view('billDetails.index', ['exams' => $exams]);
     }
 
     /**
@@ -27,7 +25,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('billDetails.create');
     }
 
     /**
@@ -41,7 +39,7 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(string $id)
     {
         //
     }
@@ -49,7 +47,7 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department)
+    public function edit(string $id)
     {
         //
     }
@@ -57,7 +55,7 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -65,7 +63,7 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(string $id)
     {
         //
     }

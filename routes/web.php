@@ -1,11 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\BillDetailController;
 use App\Http\Controllers\BillingSectorController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ExamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/course/{course}/update', [CourseController::class, 'update'])->name('course.update');
     Route::delete('/course/{course}/destroy', [CourseController::class, 'destroy'])->name('course.destroy');
 
+
+    Route::get('/billDetail', [BillDetailController::class, 'index'])->name('billDetail.index');
+    Route::get('/billDetail/create', [BillDetailController::class, 'create'])->name('billDetail.create');
+    // Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');;
     Route::get('/fetchBillingSectorData', [BillingSectorController::class, 'fetchData'])->name('billingSectorFetch.data');
+    Route::post('/saveData', [BillDetailController::class, 'saveData'])->name('billDetailSave.data');
 });
