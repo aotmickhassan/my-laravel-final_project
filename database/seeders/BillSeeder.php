@@ -13,6 +13,7 @@ class BillSeeder extends Seeder
      *
      * @return void
      */
+    // ALTER TABLE `bills` AUTO_INCREMENT = 1; 
     public function run(): void
     {
         Bill::create([
@@ -32,14 +33,14 @@ class BillSeeder extends Seeder
         ]);
         Bill::insert([
             [
-                'exam_id' => 1, // Assuming exam_id 1 exists in exams table
+                'exam_id' => 3, // Assuming exam_id 1 exists in exams table
                 'bank_account' => '10000',
                 'branch_name' => 'master Branch',
                 'routing_number' => '00222267',
                 'bill_date' => '2024-08-01',
             ],
             [
-                'exam_id' => 2, // Assuming exam_id 2 exists in exams table
+                'exam_id' => 4, // Assuming exam_id 2 exists in exams table
                 'bank_account' => '200001',
                 'branch_name' => '2nd Branch',
                 'routing_number' => '005671',

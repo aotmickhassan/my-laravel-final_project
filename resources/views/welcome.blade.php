@@ -1,5 +1,86 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Automated Individual Bill Generation System</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="antialiased bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+
+    <!-- Hero Section -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-6">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold">Automated Individual Bill Generation System</h1>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">
+                A simple and efficient way for University Employees to manage bills.
+            </p>
+        </div>
+
+        <!-- Authentication Links -->
+        @if (Route::has('login'))
+            <div class="flex gap-4">
+                @auth
+                    <a href="{{ route('dashboard') }}" 
+                        class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition">
+                        Go to Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" 
+                        class="inline-flex items-center px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg hover:bg-green-600 transition">
+                        Log in
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" 
+                            class="inline-flex items-center px-6 py-3 bg-gray-700 text-white rounded-lg shadow-lg hover:bg-gray-900 transition">
+                            Register
+                        </a>
+                    @endif
+                @endauth
+            </div>
+        @endif
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="bg-white dark:bg-gray-800 py-12 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-semibold mb-6">How It Works</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">1. Register</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">Sign up and create your account.</p>
+                </div>
+                <div class="p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">2. Generate Bills</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">Automatically generate bills with one click.</p>
+                </div>
+                <div class="p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">3. Download & Print</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">Download invoices and print for records.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center py-12">
+        <h2 class="text-2xl font-semibold">Start Managing Your Bills Today!</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Join now and experience hassle-free bill management.</p>
+        <a href="{{ route('register') }}" class="mt-4 inline-block px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition">
+            Get Started
+        </a>
+    </div>
+
+</body>
+</html>
+
+
+{{-- <!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -130,19 +211,4 @@
             </div>
         </div>
     </body>
-    </html>
-    
-
-    {{-- <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary btn-outline-primary">
-                <a href="{{ route('teacher.index') }}" class="text-decoration-none text-white"><i><strong>View Teachers Table</strong></i></a>
-            </button>
-        </div>
-        
-        <div>
-            <button type="button" class="btn btn-primary btn-outline-primary">
-                <a href="{{ route('course.index') }}" class="text-decoration-none text-white"><i><strong>View Courses Table</strong></i></a>
-            </button>
-        </div>
-    </div> --}}
+    </html> --}}

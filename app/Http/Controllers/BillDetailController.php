@@ -34,13 +34,14 @@ class BillDetailController extends Controller
                     'count' => $row['count'],
                     'is_full_paper' => $row['paper_type'], // 1 for full, 0 for half
                     'rate' => $row['rate'],
+                    'quantity' => $row['quantity'],
                 ]);
             }
 
-            return response()->json(['message' => 'Data saved successfully.'], 200);
+            return response()->json(['message' => 'Bill data saved successfully.'], 200);
         } catch (\Exception $e) {
             Log::error('Error saving bill details: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to save data.'], 500);
+            return response()->json(['message' => 'Failed to save bill data.'], 500);
         }
     }
 
@@ -60,46 +61,6 @@ class BillDetailController extends Controller
     {
         // Return a form for creating a new bill detail
         return view('billDetails.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
 // public function saveData(Request $request)

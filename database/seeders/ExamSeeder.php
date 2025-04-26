@@ -29,7 +29,7 @@ class ExamSeeder extends Seeder
                 'exam_department' => 'Computer Engineering',
                 'session_year' => '2025-2026',
                 'semester' => 'Fall',
-                'exam_start_date' => '2025-06-36',
+                'exam_start_date' => '2025-06-30',
                 'exam_end_date' => '2025-08-10',
 
             ],

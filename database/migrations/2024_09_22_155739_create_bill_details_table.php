@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('count'); // Assuming count is an integer
             $table->boolean('is_full_paper'); // Assuming it's a boolean
             $table->decimal('rate', 8, 2); // Rate as decimal (8 digits total, 2 after decimal)
+            $table->integer('quantity');
             $table->foreign('billing_sector_id') // Foreign Key referencing billing_sectors
                 ->references('id')->on('billing_sectors')->onDelete('cascade');
             $table->foreign('bill_id') // Foreign Key referencing bills

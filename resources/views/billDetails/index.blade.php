@@ -31,7 +31,8 @@
                         <th>Count</th>
                         <th>Paper Type</th>
                         <th>Rate</th>
-                        <th>Total Amount</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,15 +43,33 @@
                         <td>{{ $bill->course_code }}</td>
                         <td class="text-center">{{ $bill->count }}</td>
                         <td>{{ $bill->is_full_paper ? 'Full Paper' : 'Half Paper' }}</td>
-                        <td class="text-end">{{ number_format($bill->rate, 2) }}</td>
-                        <td class="text-end">{{ number_format($bill->count * $bill->rate, 2) }}</td>
+                        <td class="text-center">{{ number_format($bill->rate, 2) }}</td>
+                        <td class="text-center">{{ $bill->quantity }}</td>
+                        <td class="text-left">
+                            {{ number_format($bill->count * $bill->rate * $bill->quantity, 2) }} 
+                        </td> 
                     </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7" class="text-end"><strong>Total Amount:</strong></td>
+                        <td class="text-start">
+                            <strong class="text-success">
+                                {{ number_format($billDetails->sum(function($bill) {
+                                    return $bill->count * $bill->rate * $bill->quantity;
+                                }), 2) }}
+                            </strong>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
-        
-        
+        <button type="button" class="btn btn-custom btn-primary">
+            <a href="{{ route('department.index') }}" class="text-white text-decoration-none">
+                <i><strong>View Departments Table</strong></i>
+            </a>
+        </button>
     </div>
 
     <!-- Include Bootstrap JS for interactive table (optional) -->
