@@ -11,7 +11,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ExamController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('new');
+    // return view('welcome');
 });
 
 Route::get('/dashboard', function () {
@@ -44,9 +45,13 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/course/{course}/destroy', [CourseController::class, 'destroy'])->name('course.destroy');
 
 
+    Route::get('/bills', [BillDetailController::class, 'bills'])->name('bills.index');
     Route::get('/billDetail', [BillDetailController::class, 'index'])->name('billDetail.index');
+
     Route::get('/billDetail/create', [BillDetailController::class, 'create'])->name('billDetail.create');
     // Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');;
+
     Route::get('/fetchBillingSectorData', [BillingSectorController::class, 'fetchData'])->name('billingSectorFetch.data');
+
     Route::post('/saveData', [BillDetailController::class, 'saveData'])->name('billDetailSave.data');
 });

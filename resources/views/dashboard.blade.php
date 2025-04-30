@@ -1,4 +1,16 @@
-<x-app-layout>
+@extends('layouts.main')
+
+@section('title', 'Home')
+
+@section('content')
+    <h1>Welcome Home</h1>
+    <p></p>
+@endsection
+
+
+
+
+{{-- <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -111,7 +123,7 @@
             </form>
         </div>
     </div>
-</x-app-layout>
+</x-app-layout> --}}
 
 {{-- <x-app-layout>
     <x-slot name="header">

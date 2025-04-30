@@ -1,3 +1,76 @@
+@extends('layouts.main')
+
+@section('title', 'Course')
+
+@section('content')
+<div class="content-layout">
+    {{-- <h2 class="m-3 p-2" style="text-align: center">Teachers Table</h2> --}}
+    <div>
+        @if(session()->has('success'))
+            <div class="alert alert-success">
+                {{session('success')}}
+            </div>
+        @endif
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+        <p class="m-0" style="font-weight: 600; font-size: 20px;">Course</p>
+        {{-- <a href="{{ route('teacher.create') }}" class="btn btn-sm btn-outline-success ">Add Teacher</a> --}}
+    </div>
+
+    {{-- MAIN-SECTION-PARTS --}}
+    <div>
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
+    <div class="container">
+
+        <!-- Course creation form -->
+        <form action="{{ route('course.store') }}" method="POST">
+            @csrf
+            @method('post')
+
+            <!-- Course Title -->
+            <div class="form-group">
+                <label for="course_title">Course Title:</label>
+                <input type="text" class="form-control" id="course_title" name="course_title" value="{{ old('course_title') }}" required>
+            </div>
+
+            <!-- Course Code -->
+            <div class="form-group">
+                <label for="course_code">Course Code:</label>
+                <input type="text" class="form-control" id="course_code" name="course_code" value="{{ old('course_code') }}" required>
+            </div>
+
+            <!-- Course Credit -->
+            <div class="form-group">
+                <label for="course_credit">Course Credit:</label>
+                <input  class="form-control" id="course_credit" name="course_credit" value="{{ old('course_credit') }}">
+            </div>
+
+            <!-- Course Type -->
+            <div class="form-group">
+                <label for="course_type">Course Type:</label>
+                <input type="text" class="form-control" id="course_type" name="course_type" value="{{ old('course_type') }}" required>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+    {{-- MAIN-SECTION-PARTS --}}
+
+</div>
+@endsection
+
+{{--
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,12 +94,12 @@
             </ul>
         </div>
         @endif
-        
+
         <!-- Course creation form -->
         <form action="{{ route('course.store') }}" method="POST">
             @csrf
             @method('post')
-            
+
             <!-- Course Title -->
             <div class="form-group">
                 <label for="course_title">Course Title:</label>
@@ -59,4 +132,4 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-</html>
+</html> --}}

@@ -13,7 +13,7 @@
         @endif
     </div>
     <div class="d-flex justify-content-between mb-2">
-        <p class="m-0" style="font-weight: 600; font-size: 20px;">Bill Details</p>
+        <p class="m-0" style="font-weight: 600; font-size: 20px;">Bills</p>
         {{-- <a href="{{ route('course.create') }}" class="btn btn-sm btn-outline-success ">Add Course</a> --}}
     </div>
 
@@ -26,20 +26,22 @@
                 <thead class="table-primary">
                     <tr class="text-center">
                         <th>ID</th>
-                        <th>Billing Sector</th>
-                        <th>Course Code</th>
-                        <th>Count</th>
-                        <th>Paper Type</th>
-                        <th>Rate</th>
-                        <th>Quantity</th>
-                        <th>Amount</th>
+                        <th>Bill Count</th>
+                        <th>Bill Amount</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($billDetails as $bill)
+                    @foreach ($bills as $bill)
                     <tr>
                         <td class="text-center">{{ $bill->id }}</td>
-                        <td>{{ $bill->billingSector->billing_sector_name ?? 'N/A' }}</td>
+                        <td class="text-center">{{ $bill->billDetails->count() }}</td>
+                        <td>
+                            {{ number_format($bill->billDetails->sum(function($bill) {
+                                return $bill->count * $bill->rate * $bill->quantity;
+                            }), 2) }}
+                        </td>
+                        {{-- <td>{{ $bill->billingSector->billing_sector_name ?? 'N/A' }}</td>
                         <td>{{ $bill->course_code }}</td>
                         <td class="text-center">{{ $bill->count }}</td>
                         <td>{{ $bill->is_full_paper ? 'Full Paper' : 'Half Paper' }}</td>
@@ -47,11 +49,14 @@
                         <td class="text-center">{{ $bill->quantity }}</td>
                         <td class="text-left">
                             {{ number_format($bill->count * $bill->rate * $bill->quantity, 2) }}
+                        </td> --}}
+                        <td class="text-center">
+                            <a class="btn btn-sm btn-outline-success" href="{{route('billDetail.index',['id'=>$bill['id']])}}">View Details</a>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
+                {{-- <tfoot>
                     <tr>
                         <td colspan="7" class="text-end"><strong>Total Amount:</strong></td>
                         <td class="text-start">
@@ -62,7 +67,7 @@
                             </strong>
                         </td>
                     </tr>
-                </tfoot>
+                </tfoot> --}}
             </table>
         </div>
     </div>

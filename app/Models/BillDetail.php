@@ -20,6 +20,7 @@ class BillDetail extends Model
         'is_full_paper',
         'rate',            // Rate per unit
     ];
+
     public function billingSector()
     {
         return $this->belongsTo(BillingSector::class, 'billing_sector_id');

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BillingSector;
+use App\Models\Course;
 use App\Models\BillDetail;
 use Illuminate\Http\Request;
+use App\Models\BillingSector;
 
 
 class BillingSectorController extends Controller
@@ -52,7 +53,9 @@ class BillingSectorController extends Controller
 
     public function fetchData()
     {
-        $data = BillingSector::all();
+        $billingSectors = BillingSector::all();
+        $courses = Course::all();
+        $data = ['billingSectors' => $billingSectors, 'courses' => $courses];
         return response()->json($data);
     }
 }

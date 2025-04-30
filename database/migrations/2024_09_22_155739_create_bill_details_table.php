@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bill_details', function (Blueprint $table) {
             $table->bigIncrements('id'); // Primary Key
             $table->unsignedBigInteger('billing_sector_id');
+            $table->string('billing_session_group')->nullable();
             $table->unsignedBigInteger('bill_id');
             $table->string('course_code');
             $table->integer('count'); // Assuming count is an integer

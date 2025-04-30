@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\BillDetail;
+use Illuminate\Http\Request;
 use App\Models\BillingSector;
+use Illuminate\Support\Facades\DB;
+use App\Models\BillingSessionGroup;
 use Illuminate\Support\Facades\Log;
 
 class BillDetailController extends Controller
@@ -21,23 +23,37 @@ class BillDetailController extends Controller
     {
         try {
             $data = $request->input('tableData', []);
-
+            // return response()->json(['data' => $data], 200);
             if (empty($data)) {
                 return response()->json(['message' => 'No data to save.'], 400);
             }
 
-            foreach ($data as $row) {
-                BillDetail::create([
-                    'billing_sector_id' => $row['billing_sector'], // Billing sector ID
-                    'bill_id' => $row['bill_id'], // Pass bill ID dynamically if applicable
-                    'course_code' => $row['course_code'],
-                    'count' => $row['count'],
-                    'is_full_paper' => $row['paper_type'], // 1 for full, 0 for half
-                    'rate' => $row['rate'],
-                    'quantity' => $row['quantity'],
+            DB::transaction(function () use ($data) {
+                $sessionGroup = BillingSessionGroup::create([
+                    'details' => 'N/A',
                 ]);
-            }
 
+                $billDetails = [];
+
+                foreach ($data as $row) {
+                    $billDetails[] = [
+                        'billing_sector_id' => $row['billing_sector'],
+                        'bill_id' => $row['bill_id'],
+                        'course_code' => $row['course_code'],
+                        'count' => $row['count'],
+                        'is_full_paper' => $row['paper_type'],
+                        'rate' => $row['rate'],
+                        'quantity' => $row['quantity'],
+                        'billing_session_group' => $sessionGroup->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                $sessionGroup->billDetails()->createMany($billDetails);
+            });
+
+            // return response()->json(['data' => $data], 200);
             return response()->json(['message' => 'Bill data saved successfully.'], 200);
         } catch (\Exception $e) {
             Log::error('Error saving bill details: ' . $e->getMessage());
@@ -46,13 +62,20 @@ class BillDetailController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
+        $id = $request->get('id'); // Get the ID from the request
         // Fetch all bill details from the database
-        $billDetail = BillDetail::with('billingSector')->get(); // Including related billing sector if applicable
+        $billDetail = BillDetail::with('billingSector')->where('billing_session_group',$id)->get(); // Including related billing sector if applicable
 
         // Return the index view with the bill details
         return view('billDetails.index', ['billDetails' => $billDetail]);
+    }
+    public function bills()
+    {
+        // Fetch all bill details from the database
+        $bills = BillingSessionGroup::with('billDetails')->get();
+        return view('bills.index', ['bills' => $bills]);
     }
     /**
      * Show the form for creating a new resource.
