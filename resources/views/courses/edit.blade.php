@@ -6,11 +6,13 @@
 <div class="content-layout">
     {{-- <h2 class="m-3 p-2" style="text-align: center">Teachers Table</h2> --}}
     <div>
-        @if(session()->has('success'))
-            <div class="alert alert-success">
-                {{session('success')}}
-            </div>
+        @if(session()->has('danger'))
+    <div class="alert alert-danger">
+        {{ session('danger') }}
+    </div>
         @endif
+
+    
     </div>
     <div class="d-flex justify-content-between mb-2">
         <p class="m-0" style="font-weight: 600; font-size: 20px;">Course Update</p>

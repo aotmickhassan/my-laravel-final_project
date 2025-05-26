@@ -25,12 +25,21 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $user = \App\Models\User::where('email', $request->email)->first();
+    
+        if (!$user || ($user->status !== 'active' && $user->role !== 'admin')) {
+            return back()->withErrors([
+                'email' => 'Access Denied. Your account is not active.',
+            ]);
+        }
+    
         $request->authenticate();
-
+    
         $request->session()->regenerate();
-
+    
         return redirect()->intended(RouteServiceProvider::HOME);
     }
+    
 
     /**
      * Destroy an authenticated session.

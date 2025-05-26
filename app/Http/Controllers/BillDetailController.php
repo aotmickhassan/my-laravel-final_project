@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bill;
 use App\Models\BillDetail;
 use Illuminate\Http\Request;
 use App\Models\BillingSector;
 use Illuminate\Support\Facades\DB;
 use App\Models\BillingSessionGroup;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class BillDetailController extends Controller
@@ -14,7 +16,7 @@ class BillDetailController extends Controller
 
     public function fetchBillingSectors()
     {
-        $billingSectors = BillingSector::all(); // Assuming BillingSector is the model
+        $billingSectors = BillingSector::with('course')->all(); // Assuming BillingSector is the model
         return response()->json($billingSectors);
     }
 
@@ -23,18 +25,25 @@ class BillDetailController extends Controller
     {
         try {
             $data = $request->input('tableData', []);
-            // return response()->json(['data' => $data], 200);
             if (empty($data)) {
                 return response()->json(['message' => 'No data to save.'], 400);
             }
-
-            DB::transaction(function () use ($data) {
+    
+            DB::transaction(function () use ($data, $request) {
                 $sessionGroup = BillingSessionGroup::create([
-                    'details' => 'N/A',
-                ]);
-
+                'details'          => 'N/A',
+                'created_by'       => Auth::id(),
+                'dept'             => Auth::user()->dept,
+                'session'          => $request->input('session'),
+                'exam_dept'        => $request->input('exam_dept'),
+                'year'             => $request->input('year'),
+                'semester'         => $request->input('semester'),
+                'exam_start_date'  => $request->input('exam_start_date'),
+                'exam_end_date'    => $request->input('exam_end_date'),
+            ]);
+    
                 $billDetails = [];
-
+    
                 foreach ($data as $row) {
                     $billDetails[] = [
                         'billing_sector_id' => $row['billing_sector'],
@@ -49,34 +58,63 @@ class BillDetailController extends Controller
                         'updated_at' => now(),
                     ];
                 }
-
+    
                 $sessionGroup->billDetails()->createMany($billDetails);
             });
-
-            // return response()->json(['data' => $data], 200);
+    
             return response()->json(['message' => 'Bill data saved successfully.'], 200);
+    
         } catch (\Exception $e) {
             Log::error('Error saving bill details: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to save bill data.'], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+    
 
 
     public function index(Request $request)
     {
-        $id = $request->get('id'); // Get the ID from the request
-        // Fetch all bill details from the database
-        $billDetail = BillDetail::with('billingSector')->where('billing_session_group',$id)->get(); // Including related billing sector if applicable
-
-        // Return the index view with the bill details
-        return view('billDetails.index', ['billDetails' => $billDetail]);
+        $id = $request->get('id');
+    
+        $billSessionGroup = BillingSessionGroup::with(['department','creator'])->findOrFail($id);
+    
+        if (Auth::id() !== $billSessionGroup->created_by && Auth::user()->role !== 'admin') {
+            abort(403, 'Access Denied: You are not the owner of this bill.');
+        }
+    
+        $billDetail = BillDetail::with('billingSector')
+            ->where('billing_session_group', $id)
+            ->get();
+    
+        $dept_name = $billSessionGroup->department->name;
+        $session = $billSessionGroup->session;
+        return view('billDetails.index', [
+            'billDetails' => $billDetail,
+            'dept' => $dept_name,
+            'session' => $session,
+            'creator'     => $billSessionGroup->creator->name,
+            'address'     => $billSessionGroup->creator->address,
+            'exam_dept' => $billSessionGroup->exam_dept,
+            'year' => $billSessionGroup->year,
+            'semester' => $billSessionGroup->semester,
+            'exam_start_date' => $billSessionGroup->exam_start_date,
+            'exam_end_date' => $billSessionGroup->exam_end_date,
+        ]);
     }
+    
     public function bills()
     {
-        // Fetch all bill details from the database
-        $bills = BillingSessionGroup::with('billDetails')->get();
+        $query = BillingSessionGroup::with(['billDetails', 'creator']);
+    
+        if (Auth::user()->role !== 'admin') {
+            $query->where('created_by', Auth::id());
+        }
+    
+        $bills = $query->get();
+    
         return view('bills.index', ['bills' => $bills]);
     }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('designation');
+            $table->string('department');
             // $table->integer('mobile');
             $table->string('mobile')->length(11);
             $table->string('email')->unique();

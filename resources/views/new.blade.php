@@ -3,6 +3,6 @@
 @section('title', 'Home')
 
 @section('content')
-    <h1>Welcome Home</h1>
+    <h1>Welcome, {{Auth::user()->name.', Role: '.Auth::user()->role}}</h1>
     <p></p>
 @endsection

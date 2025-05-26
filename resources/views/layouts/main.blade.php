@@ -78,13 +78,17 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h5 class="pt-2" style="padding-left:20px!important;">[APP]</h5>
+        <h5 class="pt-2" style="padding-left:20px!important;">Menu Bar</h5>
         <hr class="m-0">
-        <a href="{{ route('dashboard') }}">Dashboard</a>
-        <a href="{{ route('teacher.index') }}">Teachers</a>
+        <a href="{{ route('new-page') }}">Dashboard</a>
+        @if (Auth::user()->role=='admin')
+        {{-- <a href="{{ route('teacher.index') }}">Teachers</a> --}}
+        <a href="{{ route('users.all') }}">Users</a>
+        @endif
+        
         <a href="{{ route('course.index') }}">Courses</a>
-        <a href="{{ route('department.index') }}">Departments</a>
-        <a href="{{ route('bills.index') }}">Bills</a>
+        <a href="{{ route('department.index') }}">Create Bill</a>
+        <a href="{{ route('bills.index') }}">View Bills</a>
     </div>
 
     <!-- Main Section -->
@@ -94,7 +98,7 @@
             <div><strong>My App</strong></div>
             <div class="dropdown">
                 <a href="#" class="text-dark text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ Auth::user()->name ?? 'Username' }}
+                    {{ Auth::user()->name ?? 'User' }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li>
@@ -105,6 +109,7 @@
                     </li>
                 </ul>
             </div>
+            
         </div>
 
         <!-- Yielded content -->

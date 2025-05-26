@@ -23,6 +23,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Designation</th>
+                <th>Department</th>
                 <th>Mobile No</th>
                 <th>Email</th>
                 <th>Update</th>
@@ -35,17 +36,19 @@
                     <td>{{ $teacher->id }}</td>
                     <td>{{ $teacher->name }}</td>
                     <td>{{ $teacher->designation }}</td>
-                    <td>{{ $teacher->mobile }}</td>
+                    <td>{{ $teacher->department->name }}</td>
+                    <td>{{ $teacher->phone??'N/A' }}</td>
                     <td>{{ $teacher->email }}</td>
                     <td>
                         <a href="{{ route('teacher.edit', ['teacher'=>$teacher]) }}" class="btn btn-primary">Update</a>
                     </td>
                     <td>
-                        <form action="{{ route('teacher.destroy', ['teacher'=>$teacher]) }}" method="POST" style="display: inline-block;">
+                        <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this teacher?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
+                        
                     </td>
                 </tr>
             @endforeach

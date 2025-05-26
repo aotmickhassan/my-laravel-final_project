@@ -25,4 +25,10 @@ class BillDetail extends Model
     {
         return $this->belongsTo(BillingSector::class, 'billing_sector_id');
     }
+    public function course()
+{
+    return $this->belongsTo(Course::class, 'course_code', 'id');
+}
+
+    
 }
