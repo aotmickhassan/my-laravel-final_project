@@ -1,0 +1,1531 @@
+<!-- resources/views/departments/department.blade.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Menu</title>
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
+    crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <form>
+        <div class="d-flex p-2">
+            <div>
+                <label for="dropdown">Select a Department:</label>
+                <select id="dropdown" name="department">
+                <option value="">--Select a Department--</option>
+                @foreach ($departments as $department)
+                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                @endforeach
+            </select>
+            </div>
+            <div>
+            <label for="dropdown">Select Session:</label>
+            <select name="Session" id="session">
+                <option value="">Select Session</option>
+                <option value="2020">2020-2021</option>
+                <option value="2021">2021-2022</option>
+                <option value="2022">2022-2023</option>
+                <option value="2023">2023-2024</option>
+                <option value="2024">2024-2025</option>
+            </select>
+        </div>
+        </div>
+        <div>
+            <button class="btn btn-primary">Add Field</button>
+            <div>
+                <select>
+                    <option value="">Select Billing Sector</option>
+                    <option value="p">Paritoshik</option>
+                    <option value="m">Moderation</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function() {
+            $('#addField').click(function() {
+                const selectHTML = `
+                    <select>
+                        <option value="">Select Billing Sector</option>
+                        <option value="p">Paritoshik</option>
+                        <option value="m">Moderation</option>
+                        <option value= ></option>
+                    </select>
+                `;
+                $('#container').append(selectHTML);
+            });
+        });
+    </script>
+</body>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
+    <!-- Include the style here -->
+    <style>
+        a:hover {
+            background-color: blue !important;
+        }
+    </style>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh; background-color: white;">
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary align-items-center" 
+                    style="background-color: rgb(179, 92, 143); border-color: rgb(122, 122, 197);">
+                <a href="{{ route('teacher.index') }}" 
+                   class="text-decoration-none text-white" 
+                   style="display: block; padding: 10px; transition: background-color 0.3s; border-radius: 4px;">
+                    <i><strong>View Teachers Table</strong></i>
+                </a>
+            </button>
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary align-items-center" 
+                    style="background-color: rgb(179, 92, 143);; border-color: rgb(122, 122, 197);">
+                <a href="{{ route('course.index') }}" 
+                   class="text-decoration-none text-white" 
+                   style="display: block; padding: 10px; transition: background-color 0.3s; border-radius: 4px;">
+                    <i><strong>View Courses Table</strong></i>
+                </a>
+            </button>
+        </div>
+    </div> 
+</x-app-layout>
+</html>
+
+    <script>
+        $(document).ready(function() {
+            // Add a new Billing Sector dropdown on button click
+            $('#addField').click(function() {
+                const selectHTML = `
+                    <select class="form-control mb-2" name="billing_sector">
+                        <option value="">Select Billing Sector</option>
+                        <option value="p">Paritoshik</option>
+                        <option value="m">Moderation</option>
+                    </select>
+                `;
+                $('#container').append(selectHTML);
+            });
+        });
+    </script>
+{{-- <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh; background-color: white;">
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary align-items-center" 
+                    style="background-color: blue; border-color: blue;">
+                <a href="{{ route('department.index') }}" 
+                   class="text-decoration-none text-white" 
+                   style="display: block; padding: 10px; transition: background-color 0.3s; border-radius: 4px;">
+                    <i><strong>View Department Table</strong></i>
+                </a>
+            </button>
+        </div>
+</div> --}}
+
+<div class="button-group">
+            <button type="button" class="btn btn-custom">
+                <a href="{{ route('department.index') }}">
+                    <i><strong>View Departments Table</strong></i>
+                </a>
+            </button>
+            <a class="justify-content-right p-md-5" href="{{ route('billDetail.index') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-eye"></i> View Bill Details
+            </a>
+</div>
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
+    Route::get('/course', [CourseController::class, 'index'])->name('course.index');
+    Route::get('/course/create', [CourseController::class, 'create'])->name('course.create');
+    Route::post('/course', [CourseController::class, 'store'])->name('course.store');
+    Route::get('/course/{course}/edit', [CourseController::class, 'edit'])->name('course.edit');
+    Route::put('/course/{course}/update', [CourseController::class, 'update'])->name('course.update');
+    Route::delete('/course/{course}/destroy', [CourseController::class, 'destroy'])->name('course.destroy');
+    Route::get('/fetchBillingSectorData', [BillingSectorController::class, 'fetchData'])->name('billingSectorFetch.data');
+});
+
+<script>
+        $(document).ready(function () {
+    // Initialize DataTable and store the instance
+    const billTable = $('#billTable').DataTable();
+
+    // Initialize a counter for row numbering
+    let count = 1;
+
+    // Add a new row on button click
+    $('#addField').click(function () {
+        // Fetch billing sectors from the server
+        $.ajax({
+            url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    // Generate the dropdown options from the fetched data
+                    let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
+                    data.forEach(sector => {
+                        optionsHTML += `<option value="${sector.id}">${sector.billing_sector_name}</option>`;
+                    });
+
+                    // Add a row to the DataTable
+                    billTable.row.add([
+                        count, // Serial number
+                        `<select class="form-control" name="billing_sector[]">
+                            ${optionsHTML}
+                        </select>`,
+                        `<input type="text" class="form-control" name="course_no[]" placeholder="Enter Course No">`,
+                        `<input type="number" class="form-control scripts" name="scripts[]" value="1" placeholder="Enter No of Scripts" min="1">`,
+                        `<select class="form-control" name="paper_type[]">
+                            <option value="full">Full Paper</option>
+                            <option value="half">Half Paper</option>
+                        </select>`,
+                        `<input type="number" class="form-control rate" name="rate[]" placeholder="Enter Rate">`,
+                        `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
+                        `<button type="button" class="btn btn-danger removeRow">Remove</button>`
+                    ]).draw(false); // Draw the table to update the UI
+
+                    // Increment the counter for the next row
+                    count++;
+                } else {
+                    console.error('No billing sectors available to add.');
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching billing sectors:', error);
+            }
+        });
+    });
+
+    // Event delegation to handle row removal
+    $('#billTable tbody').on('click', '.removeRow', function () {
+        // Remove the row from DataTable
+        billTable.row($(this).closest('tr')).remove().draw(false);
+
+        // Recalculate serial numbers after a row is removed
+        let currentRows = billTable.rows().nodes();
+        $(currentRows).each(function (index, row) {
+            $(row).find('td:first').text(index + 1); // Update the serial number column
+        });
+
+        // Decrement the counter for serial numbers
+        count--;
+
+        // Update total amount after row removal
+        calculateTotalAmount();
+    });
+
+    // Function to calculate total amount per row and overall total amount
+    function calculateTotalAmount() {
+        let totalAmount = 0;
+
+        // Loop through all rows and calculate the total amount per row
+        $('#billTable tbody tr').each(function () {
+            const scripts = parseFloat($(this).find('.scripts').val()) || 1; // Default to 1 if empty
+            const rate = parseFloat($(this).find('.rate').val());
+
+            // Only calculate row total if the rate has a valid value
+            if (!isNaN(rate) && rate > 0) {
+                const rowTotal = scripts * rate;
+
+                // Set the calculated row total into the Total Amount input field
+                $(this).find('.total-amount').val(rowTotal.toFixed(2));
+
+                // Add the row total to the overall total amount
+                totalAmount += rowTotal;
+            } else {
+                // Clear the Total Amount field if rate is invalid
+                $(this).find('.total-amount').val('');
+            }
+        });
+
+        // Update the total amount display
+        $('#totalAmount').text(totalAmount.toFixed(2));
+    }
+
+    // Recalculate the row total and overall total whenever Scripts or Rate changes
+    $('#billTable tbody').on('input', '.scripts, .rate', function () {
+        calculateTotalAmount();
+    });
+    });
+</script>
+
+<script>
+        $(document).ready(function () {
+            // Initialize DataTable and store the instance
+            const billTable = $('#billTable').DataTable();
+    
+            // Initialize a counter for row numbering
+            let count = 1;
+    
+            // Function to get all selected billing sector IDs
+            function getSelectedBillingSectors() {
+                const selectedSectors = [];
+                $('select[name="billing_sector[]"]').each(function () {
+                    const value = $(this).val();
+                    if (value) {
+                        selectedSectors.push(value);
+                    }
+                });
+                return selectedSectors;
+            }
+    
+            // Function to fetch billing sectors and generate dropdown options
+            function generateBillingSectorOptions(selectedSectors, callback) {
+                $.ajax({
+                    url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.length > 0) {
+                            // Generate the dropdown options, excluding already selected sectors
+                            let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
+                            data.forEach(sector => {
+                                if (!selectedSectors.includes(sector.id.toString())) {
+                                    optionsHTML += `<option value="${sector.id}">${sector.billing_sector_name}</option>`;
+                                }
+                            });
+                            callback(optionsHTML);
+                        } else {
+                            console.error('No billing sectors available to add.');
+                            callback('');
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error fetching billing sectors:', error);
+                        callback('');
+                    }
+                });
+            }
+    
+            // Add a new row on button click
+            $('#addField').click(function () {
+                // Get currently selected billing sectors
+                const selectedSectors = getSelectedBillingSectors();
+    
+                // Fetch billing sectors and generate options
+                generateBillingSectorOptions(selectedSectors, function (optionsHTML) {
+                    if (optionsHTML) {
+                        // Add a row to the DataTable
+                        billTable.row.add([
+                            count, // Serial number
+                            `<select class="form-control" name="billing_sector[]">
+                                ${optionsHTML}
+                            </select>`,
+                            `<input type="text" class="form-control" name="course_no[]" placeholder="Enter Course No">`,
+                            `<input type="number" class="form-control scripts" name="scripts[]" value="1" placeholder="Enter No of Scripts" min="1">`,
+                            `<select class="form-control" name="paper_type[]">
+                                <option type="boolean" value="1">Full Paper</option>
+                                <option type="boolean" value="0">Half Paper</option>
+                            </select>`,
+                            `<input type="number" class="form-control rate" name="rate[]" placeholder="Enter Rate">`,
+                            `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
+                            `<button type="button" class="btn btn-danger removeRow">Remove</button>`
+                        ]).draw(false); // Draw the table to update the UI
+    
+                        // Increment the counter for the next row
+                        count++;
+                    } else {
+                        alert('No more billing sectors available to add.');
+                    }
+                });
+            });
+    
+            // Event delegation to handle row removal
+            $('#billTable tbody').on('click', '.removeRow', function () {
+                // Remove the row from DataTable
+                billTable.row($(this).closest('tr')).remove().draw(false);
+    
+                // Recalculate serial numbers after a row is removed
+                let currentRows = billTable.rows().nodes();
+                $(currentRows).each(function (index, row) {
+                    $(row).find('td:first').text(index + 1); // Update the serial number column
+                });
+    
+                // Decrement the counter for serial numbers
+                count--;
+    
+                // Update total amount after row removal
+                calculateTotalAmount();
+            });
+    
+            // Function to calculate total amount per row and overall total amount
+            function calculateTotalAmount() {
+                let totalAmount = 0;
+    
+                // Loop through all rows and calculate the total amount per row
+                $('#billTable tbody tr').each(function () {
+                    const scripts = parseFloat($(this).find('.scripts').val()) || 1; // Default to 1 if empty
+                    const rate = parseFloat($(this).find('.rate').val());
+    
+                    // Only calculate row total if the rate has a valid value
+                    if (!isNaN(rate) && rate > 0) {
+                        const rowTotal = scripts * rate;
+    
+                        // Set the calculated row total into the Total Amount input field
+                        $(this).find('.total-amount').val(rowTotal.toFixed(2));
+    
+                        // Add the row total to the overall total amount
+                        totalAmount += rowTotal;
+                    } else {
+                        // Clear the Total Amount field if rate is invalid
+                        $(this).find('.total-amount').val('');
+                    }
+                });
+    
+                // Update the total amount display
+                $('#totalAmount').text(totalAmount.toFixed(2));
+            }
+    
+            // Recalculate the row total and overall total whenever Scripts or Rate changes
+            $('#billTable tbody').on('input', '.scripts, .rate', function () {
+                calculateTotalAmount();
+            });
+            $('#saveData').click(function () {
+        const tableData = collectData();
+        if (tableData.length === 0) {
+            alert('No data to save.');
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('billDetailSave.data') }}",
+            type: 'POST',
+            data: JSON.stringify({ _token: "{{ csrf_token() }}", data: tableData }),
+            contentType: 'application/json',
+            success: function () {
+                alert('Data saved successfully!');
+                billTable.clear().draw(); // Clear the table after saving
+            },
+            error: function () {
+                alert('Error saving data.');
+            }
+        });
+    
+        });
+</script>  
+
+----before importing-----
+<script>
+    $(document).ready(function () {
+    const billTable = $('#billTable').DataTable();
+    let count = 1;
+
+    // Function to get already selected billing sector IDs
+    function getSelectedBillingSectors() {
+        const selectedIds = [];
+        $('#billTable tbody tr').each(function () {
+            const selectedValue = $(this).find('select[name="billing_sector[]"]').val();
+            if (selectedValue) {
+                selectedIds.push(selectedValue);
+            }
+        });
+        return selectedIds;
+    }
+
+    // Add a new field
+    $('#addField').click(function () {
+        $.ajax({
+            url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    const selectedIds = getSelectedBillingSectors(); // Get already selected IDs
+                    let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
+                    data.forEach(sector => {
+                        if (!selectedIds.includes(sector.id.toString())) { // Add only unselected options
+                            optionsHTML += `<option value="${sector.id}">${sector.billing_sector_name}</option>`;
+                        }
+                    });
+
+                    // Add the new row
+                    billTable.row.add([
+                        count,
+                        `<select class="form-control" name="billing_sector[]">
+                            ${optionsHTML}
+                        </select>`,
+                        `<input type="text" class="form-control" name="course_no[]" placeholder="Enter Course No">`,
+                        `<input type="number" class="form-control scripts" name="scripts[]" value="1" placeholder="Enter No of Scripts" min="1">`,
+                        `<select class="form-control" name="paper_type[]">
+                            <option value="full">Full Paper</option>
+                            <option value="half">Half Paper</option>
+                        </select>`,
+                        `<input type="number" class="form-control rate" name="rate[]" placeholder="Enter Rate">`,
+                        `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
+                        `<button type="button" class="btn btn-danger removeRow">Remove</button>`
+                    ]).draw(false);
+
+                    count++;
+                } else {
+                    console.error('No billing sectors available to add.');
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching billing sectors:', error);
+            }
+        });
+    });
+
+    // Remove a row
+    $('#billTable tbody').on('click', '.removeRow', function () {
+        billTable.row($(this).closest('tr')).remove().draw(false);
+
+        let currentRows = billTable.rows().nodes();
+        $(currentRows).each(function (index, row) {
+            $(row).find('td:first').text(index + 1);
+        });
+
+        count--;
+        calculateTotalAmount();
+    });
+
+    // Calculate total amount
+    function calculateTotalAmount() {
+        let totalAmount = 0;
+
+        $('#billTable tbody tr').each(function () {
+            const scripts = parseFloat($(this).find('.scripts').val()) || 1;
+            const rate = parseFloat($(this).find('.rate').val());
+
+            if (!isNaN(rate) && rate > 0) {
+                const rowTotal = scripts * rate;
+                $(this).find('.total-amount').val(rowTotal.toFixed(2));
+                totalAmount += rowTotal;
+            } else {
+                $(this).find('.total-amount').val('');
+            }
+        });
+
+        $('#totalAmount').text(totalAmount.toFixed(2));
+    }
+
+    // Recalculate total amount on input
+    $('#billTable tbody').on('input', '.scripts, .rate', function () {
+        calculateTotalAmount();
+    });
+    });
+</script>
+
+-----ajax post to DB-----
+<script>
+    $('#saveData').click(function () {
+    const tableData = [];
+    $('#billTable tbody tr').each(function () {
+        const row = {
+            billing_sector: $(this).find('select[name="billing_sector[]"]').val(),
+            course_code: $(this).find('input[name="course_no[]"]').val(),
+            count: $(this).find('input[name="scripts[]"]').val(),
+            paper_type: $(this).find('select[name="paper_type[]"]').val(),
+            rate: $(this).find('input[name="rate[]"]').val(),
+            bill_id: 1 // Replace with dynamic bill_id if needed
+        };
+
+        // Only add rows with valid billing sector and rate
+        if (row.billing_sector && row.rate) {
+            tableData.push(row);
+        }
+    });
+
+    // Ensure there's data to save
+    if (tableData.length === 0) {
+        alert('No data to save!');
+        return;
+    }
+
+    // AJAX POST request to save the data
+    $.ajax({
+        url: "{{ route('billDetailSave.data') }}",
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { tableData: tableData },
+        success: function (response) {
+            alert(response.message);
+            // Optionally, reset the table
+            // $('#billTable').DataTable().clear().draw();
+        },
+        error: function (xhr) {
+            console.error('Error response:', xhr.responseText);
+            alert('Failed to save data. Please try again.');
+        }
+    });
+    });
+</script>
+
+--not new ajax post--
+<script>
+    $(document).ready(function () {
+    $('#saveData').click(function () {
+        const tableData = [];
+
+        // Gather table data
+        $('#billTable tbody tr').each(function () {
+            const row = {
+                billing_sector: $(this).find('select[name="billing_sector[]"]').val(),
+                course_code: $(this).find('input[name="course_no[]"]').val(),
+                count: $(this).find('input[name="scripts[]"]').val(),
+                paper_type: $(this).find('select[name="paper_type[]"]').val(),
+                rate: $(this).find('input[name="rate[]"]').val(),
+                bill_id: 1 // Static for now, make it dynamic if needed
+            };
+
+            if (row.billing_sector && row.rate) {
+                tableData.push(row);
+            }
+        });
+
+        // Check if data exists
+        if (tableData.length === 0) {
+            alert('No data to save!');
+            return;
+        }
+
+        // Make AJAX POST request
+        $.ajax({
+            url: "{{ route('billDetailSave.data') }}",
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: { tableData: tableData },
+            success: function (response) {
+                console.log('Success:', response);
+                alert(response.message);
+            },
+            error: function (xhr) {
+                console.error('Error:', xhr.responseText);
+                alert('Failed to save data. Please check the console for details.');
+            }
+        });
+    });
+    });
+</script>
+
+
+--table --
+<table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Billing Sector</th>
+                    <th>Course Code</th>
+                    <th>Count</th>
+                    <th>Paper Type</th>
+                    <th>Rate</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($billDetails as $bill)
+                <tr>
+                    <td>{{ $bill->id }}</td>
+                    <td>{{ $bill->billingSector->billing_sector_name ?? 'N/A' }}</td>
+                    <td>{{ $bill->course_code }}</td>
+                    <td>{{ $bill->count }}</td>
+                    <td>{{ $bill->is_full_paper ? 'Full Paper' : 'Half Paper' }}</td>
+                    <td>{{ $bill->rate }}</td>
+                    <td>{{ $bill->count * $bill->rate }}</td> <!-- Calculate total amount -->
+                </tr>
+                @endforeach
+            </tbody>
+</table>
+
+--Controller not necessary--
+public function saveData(Request $request)
+    {
+        // Log incoming data for debugging
+        Log::info('Received Data:', $request->all());
+
+        // Validate incoming data
+        $request->validate([
+            'tableData.*.billing_sector' => 'required|integer|exists:billing_sectors,id',
+            'tableData.*.course_code' => 'required|string',
+            'tableData.*.count' => 'required|integer|min:1',
+            'tableData.*.paper_type' => 'required|in:0,1',
+            'tableData.*.rate' => 'required|numeric|min:0',
+            'tableData.*.bill_id' => 'required|integer',
+        ]);
+
+        try {
+            foreach ($request->tableData as $row) {
+                BillDetail::create([
+                    'billing_sector_id' => $row['billing_sector'],
+                    'course_code' => $row['course_code'],
+                    'count' => $row['count'],
+                    'is_full_paper' => $row['paper_type'],
+                    'rate' => $row['rate'],
+                    'bill_id' => $row['bill_id'],
+                ]);
+            }
+
+            return response()->json(['message' => 'Data saved successfully!'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error saving data: ' . $e->getMessage());
+            return response()->json(['message' => 'Failed to save data.'], 500);
+        }
+    }
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Department Menu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css" />
+
+    <script  src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Department and Session Selection</h2>
+        <form>
+            <!-- Department Selection -->
+            <div class="form-group">
+                <label for="dropdown">Select a Department:</label>
+                <select id="dropdown" name="department" class="form-control">
+                    <option value="">--Select a Department--</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Session Selection -->
+            <div class="form-group">
+                <label for="session">Select Session:</label>
+                <select name="session" id="session" class="form-control">
+                    <option value="">--Select Session--</option>
+                    <option value="2020">2020-2021</option>
+                    <option value="2021">2021-2022</option>
+                    <option value="2022">2022-2023</option>
+                    <option value="2023">2023-2024</option>
+                    <option value="2024">2024-2025</option>
+                </select>
+            </div>
+
+            <!-- Add Billing Sector Dropdown Button -->
+            <div class="flex justify-content-center full-width ">
+                <button type="button" id="addField" class="btn btn-primary">Add Billing Sector</button>
+            </div>
+            <!-- Billing Sector Selection -->
+            <div id = "billingSectorsList">
+            <div id="container" class="form-group">
+                <table id="billTable" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%">Sl</th>
+                        <th style="width: 20%;">Name</th>
+                        <th style="width: 20%;">Course No</th>
+                        <th style="width: 5%">No of Script/Student/Days</th>
+                        <th style="width: 10%">Full Paper/Half Paper</th>
+                        <th style="width: 15%">Rate</th>
+                        <th style="width: 15%">Total Amount</th>
+                        <th style="width: 10%">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <div id="totalAmountDisplay" class="mt-3">
+                    <h4 style="align-content: left">Total Amount: <span id="totalAmount" class="text-success">0</span></h4>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" id="saveData" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Save Data
+                    </button>
+                </div>
+                <div class="d-flex justify-content-left">
+                    <a href="{{ route('billDetail.index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-eye"></i> View Bill Details
+                    </a>
+                </div>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+        const billTable = $('#billTable').DataTable();
+        let count = 1;
+    
+        // Function to get already selected billing sector IDs
+        function getSelectedBillingSectors() {
+            const selectedIds = [];
+            $('#billTable tbody tr').each(function () {
+                const selectedValue = $(this).find('select[name="billing_sector[]"]').val();
+                if (selectedValue) {
+                    selectedIds.push(selectedValue);
+                }
+            });
+            return selectedIds;
+        }
+    
+        // Add a new field
+        $('#addField').click(function () {
+                $.ajax({
+                url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.length > 0) {
+                        const selectedIds = getSelectedBillingSectors(); // Get already selected IDs
+                        let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
+                        data.forEach(sector => {
+                            if (!selectedIds.includes(sector.id.toString())) { // Add only unselected options
+                                optionsHTML += `<option value="${sector.id}">${sector.billing_sector_name}</option>`;
+                            }
+                        });
+    
+                        // Add the new row
+                        billTable.row.add([
+                            count,
+                            `<select class="form-control" id="billSector" name="billing_sector[]">
+                                ${optionsHTML}
+                            </select>`,
+                            `<input type="text" class="form-control" id="course_no" name="course_no[]" placeholder="Enter Course No">`,
+                            `<input type="number" class="form-control scripts" id="count" name="scripts[]" value="1" placeholder="Enter No of Scripts" min="1">`,
+                            `<select class="form-control" id="paper" name="paper_type[]">
+                                <option value="1">Full Paper</option>
+                                <option value="0">Half Paper</option>
+                            </select>`,
+                            `<input type="number" class="form-control rate" id="rate" name="rate[]" placeholder="Enter Rate">`,
+                            `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
+                            `<button type="button" class="btn btn-danger removeRow">Remove</button>`
+                            // `<button type="button" class="btn btn-secondary saveRow">Save</button>`
+                        ]).draw(false);
+    
+                        count++;
+                    } else {
+                        console.error('No billing sectors available to add.');
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching billing sectors:', error);
+                }
+            });
+        });
+    
+        // Remove a row
+        $('#billTable tbody').on('click', '.removeRow', function () {
+            billTable.row($(this).closest('tr')).remove().draw(false);
+    
+            let currentRows = billTable.rows().nodes();
+            $(currentRows).each(function (index, row) {
+                $(row).find('td:first').text(index + 1);
+            });
+    
+            count--;
+            calculateTotalAmount();
+        });
+    
+        // Calculate total amount
+        function calculateTotalAmount() {
+            let totalAmount = 0;
+    
+            $('#billTable tbody tr').each(function () {
+                const scripts = parseFloat($(this).find('.scripts').val()) || 1;
+                const rate = parseFloat($(this).find('.rate').val());
+    
+                if (!isNaN(rate) && rate > 0) {
+                    const rowTotal = scripts * rate;
+                    $(this).find('.total-amount').val(rowTotal.toFixed(2));
+                    totalAmount += rowTotal;
+                } else {
+                    $(this).find('.total-amount').val('');
+                }
+            });
+    
+            $('#totalAmount').text(totalAmount.toFixed(2));
+        }
+    
+        // Recalculate total amount on input
+        $('#billTable tbody').on('input', '.scripts, .rate', function () {
+            calculateTotalAmount();
+        });
+        });
+    </script>
+<script>
+    $('#saveData').click(function () {
+    const tableData = [];
+    $('#billTable tbody tr').each(function () {
+        const row = {
+            billing_sector: $(this).find('select[name="billing_sector[]"]').val(),
+            course_code: $(this).find('input[name="course_no[]"]').val(),
+            count: $(this).find('input[name="scripts[]"]').val(),
+            paper_type: $(this).find('select[name="paper_type[]"]').val(),
+            rate: $(this).find('input[name="rate[]"]').val(),
+            bill_id: 1 // Replace with dynamic bill_id if needed
+        };
+
+        // Only add rows with valid billing sector and rate
+        if (row.billing_sector && row.rate) {
+            tableData.push(row);
+        }
+    });
+
+    // Ensure there's data to save
+    if (tableData.length === 0) {
+        alert('No data to save!');
+        return;
+    }
+
+    // AJAX POST request to save the data
+    $.ajax({
+        url: "{{ route('billDetailSave.data') }}",
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { tableData: tableData },
+        success: function (response) {
+            alert(response.message);
+            // Optionally, reset the table
+            // $('#billTable').DataTable().clear().draw();
+        },
+        error: function (xhr) {
+            console.error('Error response:', xhr.responseText);
+            alert('Failed to save the ajax post data. Please try again.');
+        }
+    });
+    });
+</script>
+</body>
+</html>
+---------------------saveData---------
+<script>
+    $('#saveData').click(function () {
+    const tableData = [];
+    $('#billTable tbody tr').each(function () {
+        const row = {
+            billing_sector: $(this).find('select[name="billing_sector[]"]').val(),
+            course_code: $(this).find('input[name="course_no[]"]').val(),
+            count: $(this).find('input[name="scripts[]"]').val(),
+            paper_type: $(this).find('select[name="paper_type[]"]').val(),
+            rate: $(this).find('input[name="rate[]"]').val(),
+            bill_id: 1 // Replace with dynamic bill_id if needed
+        };
+
+        // Only add rows with valid billing sector and rate
+        if (row.billing_sector && row.rate) {
+            tableData.push(row);
+        }
+    });
+
+    // Ensure there's data to save
+    if (tableData.length === 0) {
+        alert('No data to save!');
+        return;
+    }
+
+    // AJAX POST request to save the data
+    $.ajax({
+        url: "{{ route('billDetailSave.data') }}",
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { tableData: tableData },
+        success: function (response) {
+            alert(response.message);
+            // Optionally, reset the table
+            // $('#billTable').DataTable().clear().draw();
+        },
+        error: function (xhr) {
+            console.error('Error response:', xhr.responseText);
+            alert('Failed to save the ajax post data. Please try again.');
+        }
+    });
+    });
+</script>
+
+---------------include----------
+{{-- @extends('layouts.app')
+    @section('content')
+        @include('departments.partials.scripts')
+    @endsection
+
+    @push('scripts')
+    <script>
+        window.saveDataRoute = "{{ route('billDetailSave.data') }}";
+    </script>
+    <!-- External script reference -->
+    <script src="{{ asset('js/department-scripts.js') }}"></script>
+    <script src="{{ asset('js/saveData.js') }}"></script>
+    @endpush --}}
+    
+--------------department/index-------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Department Menu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css" />
+
+    <script  src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Department and Session Selection</h2>
+        <form>
+            <!-- Department Selection -->
+            <div class="form-group">
+                <label for="dropdown">Select a Department:</label>
+                <select id="dropdown" name="department" class="form-control">
+                    <option value="">--Select a Department--</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Session Selection -->
+            <div class="form-group">
+                <label for="session">Select Session:</label>
+                <select name="session" id="session" class="form-control">
+                    <option value="">--Select Session--</option>
+                    <option value="2020">2020-2021</option>
+                    <option value="2021">2021-2022</option>
+                    <option value="2022">2022-2023</option>
+                    <option value="2023">2023-2024</option>
+                    <option value="2024">2024-2025</option>
+                </select>
+            </div>
+
+            <!-- Add Billing Sector Dropdown Button -->
+            <div class="flex justify-content-center full-width ">
+                <button type="button" id="addField" class="btn btn-primary">Add Billing Sector</button>
+            </div>
+            <!-- Billing Sector Selection -->
+            <div id = "billingSectorsList">
+            <div id="container" class="form-group">
+                <table id="billTable" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%">Sl</th>
+                        <th style="width: 20%;">Name</th>
+                        <th style="width: 20%;">Course No</th>
+                        <th style="width: 5%">No of Script/Student/Days</th>
+                        <th style="width: 10%">Full Paper/Half Paper</th>
+                        <th style="width: 15%">Rate</th>
+                        <th style="width: 15%">Total Amount</th>
+                        <th style="width: 10%">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <div id="totalAmountDisplay" class="mt-3">
+                    <h4 style="align-content: left">Total Amount: <span id="totalAmount" class="text-success">0</span></h4>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" id="saveData" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Save Data
+                    </button>
+                </div>
+                <div class="d-flex justify-content-left">
+                    <a href="{{ route('billDetail.index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-eye"></i> View Bill Details
+                    </a>
+                </div>
+        </form>
+    </div>
+<script>
+        $(document).ready(function () {
+    const billTable = $('#billTable').DataTable();
+    let count = 1;
+
+    // Function to get already selected billing sector IDs
+    function getSelectedBillingSectors() {
+        const selectedIds = [];
+        $('#billTable tbody tr').each(function () {
+            const selectedValue = $(this).find('select[name="billing_sector[]"]').val();
+            if (selectedValue) {
+                selectedIds.push(selectedValue);
+            }
+        });
+        return selectedIds;
+    }
+
+    // Add a new field
+    $('#addField').click(function () {
+            $.ajax({
+            url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    const selectedIds = getSelectedBillingSectors(); // Get already selected IDs
+                    let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
+                    data.forEach(sector => {
+                        if (!selectedIds.includes(sector.id.toString())) { // Add only unselected options
+                            optionsHTML += `<option value="${sector.id}">${sector.billing_sector_name}</option>`;
+                        }
+                    });
+
+                    // Add the new row
+                    billTable.row.add([
+                        count,
+                        `<select class="form-control" id="billSector" name="billing_sector[]">
+                            ${optionsHTML}
+                        </select>`,
+                        `<input type="text" class="form-control" id="course_no" name="course_no[]" placeholder="Enter Course No">`,
+                        `<input type="number" class="form-control scripts" id="count" name="scripts[]" value="1" placeholder="Enter No of Scripts" min="1">`,
+                        `<select class="form-control" id="paper" name="paper_type[]">
+                            <option value="1">Full Paper</option>
+                            <option value="0">Half Paper</option>
+                        </select>`,
+                        `<input type="number" class="form-control rate" id="rate" name="rate[]" placeholder="Enter Rate">`,
+                        `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
+                        `<button type="button" class="btn btn-danger removeRow">Remove</button>`
+                        // `<button type="button" class="btn btn-secondary saveRow">Save</button>`
+                    ]).draw(false);
+
+                    count++;
+                } else {
+                    console.error('No billing sectors available to add.');
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching billing sectors:', error);
+            }
+        });
+    });
+
+    // Remove a row
+    $('#billTable tbody').on('click', '.removeRow', function () {
+        billTable.row($(this).closest('tr')).remove().draw(false);
+
+        let currentRows = billTable.rows().nodes();
+        $(currentRows).each(function (index, row) {
+            $(row).find('td:first').text(index + 1);
+        });
+
+        count--;
+        calculateTotalAmount();
+    });
+
+    // Calculate total amount
+    function calculateTotalAmount() {
+        let totalAmount = 0;
+
+        $('#billTable tbody tr').each(function () {
+            const scripts = parseFloat($(this).find('.scripts').val()) || 1;
+            const rate = parseFloat($(this).find('.rate').val());
+
+            if (!isNaN(rate) && rate > 0) {
+                const rowTotal = scripts * rate;
+                $(this).find('.total-amount').val(rowTotal.toFixed(2));
+                totalAmount += rowTotal;
+            } else {
+                $(this).find('.total-amount').val('');
+            }
+        });
+
+        $('#totalAmount').text(totalAmount.toFixed(2));
+    }
+
+    // Recalculate total amount on input
+    $('#billTable tbody').on('input', '.scripts, .rate', function () {
+        calculateTotalAmount();
+    });
+    });
+</script>
+
+<script>
+    // saveData.js
+$(document).ready(function() {
+    $('#saveData').on('click', function() {
+        const tableData = [];
+        $('#billTable tbody tr').each(function() {
+            const $row = $(this);
+            const rowData = {
+                billing_sector: $row.find('select[name="billing_sector[]"]').val(),
+                course_code: $row.find('input[name="course_no[]"]').val(),
+                count: $row.find('input[name="scripts[]"]').val(),
+                paper_type: $row.find('select[name="paper_type[]"]').val(),
+                rate: $row.find('input[name="rate[]"]').val(),
+                bill_id: 1 // Will be dynamic if needed
+            };
+
+            if (rowData.billing_sector && rowData.rate) {
+                tableData.push(rowData);
+            }
+        });
+
+        if (!tableData.length) {
+            alert('No data to save!');
+            return;
+        }
+
+        $.ajax({
+            url: window.saveDataRoute, // From global variable
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: { tableData: tableData },
+            success: function(response) {
+                alert(response.message);
+                // Optional table reset
+            },
+            error: function(xhr) {
+                console.error('Error:', xhr.responseText);
+                alert('Save failed. Please check console.');
+            }
+        });
+    });
+    });
+</script>
+</body>
+</html>
+-------------------------------------------------------------------------------
+
+-----------------------app.blade.com-------------------------------------------
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        {{-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css" /> --}}
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        {{-- <div class="container">
+            @yield('content')
+        </div> --}}
+        @include('layouts.navigation')
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
+
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
+
+            <!-- Page Content -->
+            {{-- <main>
+                {{ $slot }}
+            </main> --}}
+            <main class="container min-h-screen py-12">
+                @yield('content')
+            </main>
+        </div>
+        {{-- <script  src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"></script> --}}
+    @stack('scripts')
+    </body>
+</html>
+-------------------------------------------------------------------------------
+    {{-- <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary btn-outline-primary">
+                <a href="{{ route('teacher.index') }}" class="text-decoration-none text-white"><i><strong>View Teachers Table</strong></i></a>
+            </button>
+        </div>
+        
+        <div>
+            <button type="button" class="btn btn-primary btn-outline-primary">
+                <a href="{{ route('course.index') }}" class="text-decoration-none text-white"><i><strong>View Courses Table</strong></i></a>
+            </button>
+        </div>
+    </div> --}}
+-------------------------------------------------------------------------------
+<!-- resources/views/departments/department.blade.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Department Menu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css" />
+
+    <script  src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"></script>
+    <style>
+        body {
+            font-size: 22px; /* Adjust the font size */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Department and Session Selection</h2>
+        <form>
+            <!-- Department Selection -->
+            <div class="form-group">
+                <label for="dropdown">Select a Department:</label>
+                <select id="dropdown" name="department" class="form-control">
+                    <option value="">--Select a Department--</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Session Selection -->
+            <div class="form-group">
+                <label for="session">Select Session:</label>
+                <select name="session" id="session" class="form-control">
+                    <option value="">--Select Session--</option>
+                    <option value="2020">2020-2021</option>
+                    <option value="2021">2021-2022</option>
+                    <option value="2022">2022-2023</option>
+                    <option value="2023">2023-2024</option>
+                    <option value="2024">2024-2025</option>
+                </select>
+            </div>
+
+            <!-- Add Billing Sector Dropdown Button -->
+            <div class="flex justify-content-center full-width ">
+                <button type="button" id="addField" class="btn btn-primary">Add Billing Sector</button>
+            </div>
+            <!-- Billing Sector Selection -->
+            <div id = "billingSectorsList">
+            <div id="container" class="form-group">
+                <table id="billTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%">Sl</th>
+                            <th style="width: 20%;">Name</th>
+                            <th style="width: 20%;">Course No</th>
+                            <th style="width: 5%">No of Script/Student/Days</th>
+                            <th style="width: 10%">Full Paper/Half Paper</th>
+                            <th style="width: 10%">Rate</th>
+                            <th style="width: 7%">Qty</th>
+                            <th style="width: 15%">Amount</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="totalAmountDisplay" class="mt-3">
+                    <h4 style="align-content: left">Total Amount: <span id="totalAmount" class="text-success">0</span></h4>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" id="saveData" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Save Data
+                    </button>
+                </div>
+                <div class="d-flex justify-content-left">
+                    <a href="{{ route('billDetail.index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-eye"></i> View Bill Details
+                    </a>
+                </div>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+        const billTable = $('#billTable').DataTable();
+        let count = 1;
+    
+        // Function to get already selected billing sector IDs
+        function getSelectedBillingSectors() {
+            const selectedIds = [];
+            $('#billTable tbody tr').each(function () {
+                const selectedValue = $(this).find('select[name="billing_sector[]"]').val();
+                if (selectedValue) {
+                    selectedIds.push(selectedValue);
+                }
+            });
+            return selectedIds;
+        }
+    
+        // Add a new field
+        $('#addField').click(function () {
+                $.ajax({
+                url: "{{ route('billingSectorFetch.data') }}", // Laravel route to fetch billing sectors
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.length > 0) {
+                        const selectedIds = getSelectedBillingSectors(); // Get already selected IDs
+                        let optionsHTML = `<option value="">--Select Billing Sector--</option>`;
+                        data.forEach(sector => {
+                            if (!selectedIds.includes(sector.id.toString())) { // Add only unselected options
+                                optionsHTML += `<option value="${sector.id}">${sector.billing_sector_name}</option>`;
+                            }
+                        });
+    
+                        // Add the new row
+                        billTable.row.add([
+                            count,
+                            `<select class="form-control" id="billSector" name="billing_sector[]">
+                                ${optionsHTML}
+                            </select>`,
+                            `<input type="text" class="form-control" id="course_no" name="course_no[]" placeholder="Enter Course No">`,
+                            `<input type="number" class="form-control scripts" id="count" name="scripts[]" value="1" placeholder="Enter No of Scripts" min="1">`,
+                            `<select class="form-control" id="paper" name="paper_type[]">
+                                <option value="1">Full Paper</option>
+                                <option value="0">Half Paper</option>
+                            </select>`,
+                            `<input type="number" class="form-control rate" id="rate" name="rate[]" placeholder="Enter Rate">`,
+                            `<input type="number" class="form-control" name="quantity[]" placeholder="Qty" min="1" max="3" value="1">`,
+                            `<input type="number" class="form-control total-amount" name="total_amount[]" placeholder="Total Amount" readonly>`,
+                            `<button type="button" class="btn btn-danger removeRow">Remove</button>`
+                            // `<button type="button" class="btn btn-secondary saveRow">Save</button>`
+                        ]).draw(false);
+    
+                        count++;
+                    } else {
+                        console.error('No billing sectors available to add.');
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching billing sectors:', error);
+                }
+            });
+        });
+    
+        // Remove a row
+        $('#billTable tbody').on('click', '.removeRow', function () {
+            billTable.row($(this).closest('tr')).remove().draw(false);
+    
+            let currentRows = billTable.rows().nodes();
+            $(currentRows).each(function (index, row) {
+                $(row).find('td:first').text(index + 1);
+            });
+    
+            count--;
+            calculateTotalAmount();
+        });
+    
+        // Calculate total amount
+        function calculateTotalAmount() {
+    let totalAmount = 0;
+
+    $('#billTable tbody tr').each(function () {
+        const scripts = parseFloat($(this).find('.scripts').val()) || 1;
+        const rate = parseFloat($(this).find('.rate').val()) || 0;
+        const quantity = parseFloat($(this).find('input[name="quantity[]"]').val()) || 1;
+
+        if (!isNaN(rate) && rate > 0 && !isNaN(scripts) && !isNaN(quantity)) {
+            const rowTotal = scripts * rate * quantity;
+            $(this).find('.total-amount').val(rowTotal.toFixed(2));
+            totalAmount += rowTotal;
+        } else {
+            $(this).find('.total-amount').val('');
+        }
+    });
+
+    $('#totalAmount').text(totalAmount.toFixed(2));
+}
+
+    </script>
+<script>
+    $('#saveData').click(function () {
+    const tableData = [];
+    $('#billTable tbody tr').each(function () {
+        const row = {
+            billing_sector: $(this).find('select[name="billing_sector[]"]').val(),
+        course_code: $(this).find('input[name="course_no[]"]').val(),
+        quantity: $(this).find('input[name="quantity[]"]').val(), // Add quantity here
+        count: $(this).find('input[name="scripts[]"]').val(),
+        paper_type: $(this).find('select[name="paper_type[]"]').val(),
+        rate: $(this).find('input[name="rate[]"]').val(),
+        bill_id: 1 // Replace with dynamic bill_id if needed
+        };
+
+        // Only add rows with valid billing sector and rate
+        if (row.billing_sector && row.rate) {
+            tableData.push(row);
+        }
+    });
+
+    // Ensure there's data to save
+    if (tableData.length === 0) {
+        alert('No data to save!');
+        return;
+    }
+
+    // AJAX POST request to save the data
+    $.ajax({
+        url: "{{ route('billDetailSave.data') }}",
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { tableData: tableData },
+        success: function (response) {
+            alert(response.message);
+            // Optionally, reset the table
+            // $('#billTable').DataTable().clear().draw();
+        },
+        error: function (xhr) {
+            console.error('Error response:', xhr.responseText);
+            alert('Failed to save the ajax post data. Please try again.');
+        }
+    });
+    });
+</script>
+</body>
+</html>
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
