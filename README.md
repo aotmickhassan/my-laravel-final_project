@@ -36,8 +36,6 @@ A comprehensive web application that automates the bill (invoice) generation pro
 ---
 
 ## PDF Invoice in Bangla
-<img width="1626" height="776" alt="p1" src="https://github.com/user-attachments/assets/a5639b36-2e9b-4ae3-991e-34e7405527bc" />
-
 - mPDF engine converts custom HTML invoice templates into Bangla-supporting PDF documents.
 - All fonts and layout are optimized for Bengali script and readability.
 
